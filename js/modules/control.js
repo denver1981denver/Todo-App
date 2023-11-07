@@ -2,7 +2,7 @@ import {
   removeTaskData,
   completeTaskData,
   editTaskData,
-  addTaskData as addTask,
+  addTaskData,
 } from './serviceStorage.js';
 import {createRow} from './createElements.js';
 import {renderNumberTask} from './render.js';
@@ -66,10 +66,7 @@ const count = data => {
     --counterMemory.count;
   }
 };
-// добавление задачи в локальное хранилище
-const addTaskData = (newTask, name) => {
-  addTask(newTask, name);
-};
+
 // рендер задачи
 const addTaskPage = (task, list) => {
   list.append(createRow(task));

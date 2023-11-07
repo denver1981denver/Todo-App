@@ -5,14 +5,14 @@ export const getTaskData = name => (localStorage.getItem(name) ?
 const setTaskData = (data, name) => {
   localStorage.setItem(name, JSON.stringify(data));
 };
-// Добавление задачи в базу данных
+// Добавление задачи в локальное храниилще
 export const addTaskData = (data, name) => {
   const dataBase = getTaskData(name);
   dataBase.push(data);
 
   setTaskData(dataBase, name);
 };
-// удаление задачи в базе данных
+// удаление задачи в локальном хранилище
 export const removeTaskData = (id, name) => {
   const data = getTaskData(name);
   const newData = data.filter(item => item.id !== id);
@@ -22,7 +22,7 @@ export const removeTaskData = (id, name) => {
 
   setTaskData(newData, name);
 };
-// пометка выполненной задачи в базе данных
+// пометка выполненной задачи локальном хранилище
 export const completeTaskData = (id, name) => {
   const data = getTaskData(name);
 
@@ -36,7 +36,7 @@ export const completeTaskData = (id, name) => {
 
   setTaskData(data, name);
 };
-// редактирование задачи в базе данных
+// редактирование задачи в локальном хранилище
 export const editTaskData = (id, name, text) => {
   const data = getTaskData(name);
 
