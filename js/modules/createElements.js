@@ -131,8 +131,7 @@ export const createRow = task => {
   const btnDelete = createButton(createButtonCollection('delete'));
   const btnComplete = createButton(createButtonCollection('complete'));
   const btnEdit = createButton(createButtonCollection('edit'));
-  tdBtns.append(
-      btnDelete, btnComplete, btnEdit);
+  tdBtns.append(btnDelete, btnComplete, btnEdit);
   tr.append(tdNumber, tdTask, tdStatus, tdBtns);
 
   return tr;
