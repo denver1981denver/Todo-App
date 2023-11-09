@@ -25,14 +25,13 @@ export const removeTaskData = (id, name) => {
 // пометка выполненной задачи локальном хранилище
 export const completeTaskData = (id, name, option) => {
   const data = getTaskData(name);
-  const tdStyle = (option === 'complete') ? option.td : '';
+  const tdStyle = (option.status === 'Выполнена') ? option.td : '';
+  
   data.forEach((item) => {
     if (item.id === id) {
       item.trClass = option.tr;
      
-      item.tdTaskClass = 'text-decoration-line-through';
-      
-    
+     
         item.tdTaskClass = tdStyle;
     
       item.status = option.status;

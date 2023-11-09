@@ -153,12 +153,14 @@ export const completeControl = (list, name) => {
       tr.childNodes[1].classList.toggle(completed.td);
 
         if(tr.classList.contains(completed.tr)) {
+         
           tr.childNodes[2].textContent = completed.status;
           tr.lastChild.lastChild.setAttribute('disabled', 'true');
-        
+        console.log(completed);
           completeTaskData(id, name, completed);
       
         } else {
+           tr.classList.add(progress.tr);
             tr.childNodes[2].textContent = progress.status;
             tr.lastChild.lastChild.removeAttribute('disabled');
             completeTaskData(id, name, progress);   
@@ -168,12 +170,16 @@ export const completeControl = (list, name) => {
 };
 // редактирование задачи
 export const editControl = (list, name) => {
-  list.addEventListener('click', (e) => {
+  list.addEventListener('click', e => {
     const target = e.target;
 
     if (target.closest('.btn-edit')) {
-      const task = document.querySelectorAll('.task');
-      const id = target.closest('tr').dataset.id;
+      const task = document.querySelectorAll(".task");
+      const id = target.closest("tr").dataset.id;
+
+      if(target.closest('.btn-edit').textContent === 'Редактировать') {
+      
+      target.closest('.btn-edit').textContent = 'Сохранить';
 
       for (const elem of task) {
         if (elem.parentNode.dataset.id === id) {
@@ -181,16 +187,26 @@ export const editControl = (list, name) => {
         }
       }
     }
-  });
 
-  list.addEventListener('focusout', e => {
-    const target = e.target;
-    if (target.closest('.task')) {
-      target.closest('.task').setAttribute('contenteditable', 'false');
-      const id = target.closest('tr').dataset.id;
-      const text = target.closest('.task').textContent;
+else {
+      // target.closest('.task').setAttribute('contenteditable', 'false');
+      // const id = target.closest('tr').dataset.id;
+      // const text = target.closest('.task').textContent;
+
+for (const elem of task) {
+        if (elem.parentNode.dataset.id === id) {
+          elem.setAttribute('contenteditable', 'false');
+        }
+      }
+     target.closest(".btn-edit").textContent = "Редактировать";
 
       editTaskData(id, name, text);
     }
+
+
+    }
   });
+
+  
+
 };
