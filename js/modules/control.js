@@ -10,6 +10,24 @@ import {renderNumberTask} from './render.js';
 const counterMemory = {
   count: 0,
 };
+
+const getTaskStatus = data => {
+  const taskParameters = {
+    progress: {
+      tr: 'table-light',
+      status: 'В процессе',
+    },
+    completed: {
+      tr: 'table-success',
+      td: 'text-decoration-line-through',
+      status: 'Выполнена',
+    },
+  }
+  return taskParameters[`${data}`];
+};
+
+
+
 // определение порядковых номеров при загрузке страницы согласно данным хранилища
 export const getCounterData = data => {
   counterMemory.count = data.length;
@@ -66,7 +84,6 @@ const count = data => {
     --counterMemory.count;
   }
 };
-
 // рендер задачи
 const addTaskPage = (task, list) => {
   list.append(createRow(task));
@@ -92,9 +109,10 @@ export const formControl = (form, list, name) => {
     const formData = new FormData(e.target);
     const newTask = Object.fromEntries(formData);
 
+    const taskOption = getTaskStatus('progress');
     newTask.id = createIdTask();
-    newTask.trClass = 'table-light';
-    newTask.status = 'В процессе';
+    newTask.trClass = taskOption.tr;
+    newTask.status = taskOption.status;
     newTask.number = count(true);
     addTaskPage(newTask, list);
     addTaskData(newTask, name);
@@ -105,7 +123,7 @@ export const formControl = (form, list, name) => {
 };
 // удаление задачи
 export const deleteControl = (list, name) => {
-  list.addEventListener('click', (e) => {
+  list.addEventListener('click', e => {
     const target = e.target;
 
     if (target.closest('.btn-danger')) {
@@ -122,20 +140,30 @@ export const deleteControl = (list, name) => {
 };
 // Маркировка выполненной задачи
 export const completeControl = (list, name) => {
-  list.addEventListener('click', (e) => {
+  list.addEventListener('click', e => {
     const target = e.target;
-
+    const progress = getTaskStatus('progress');
+    const completed = getTaskStatus('completed');
+    
     if (target.closest('.btn-success')) {
-      const id = target.closest('tr').dataset.id;
+      const tr = target.closest('tr');
+      const id = tr.dataset.id;
+      tr.classList.remove(progress.tr);
+      tr.classList.toggle(completed.tr);
+      tr.childNodes[1].classList.toggle(completed.td);
 
-      target.closest('tr').classList.remove('table-light');
-      target.closest('tr').classList.add('table-success');
-      target.closest('tr').childNodes[1].classList.add('text-decoration-line-through');
-      target.closest('tr').childNodes[2].textContent = 'Выполнена';
-      target.closest('tr').lastChild.lastChild.setAttribute('disabled', 'true');
-
-      completeTaskData(id, name);
+        if(tr.classList.contains(completed.tr)) {
+          tr.childNodes[2].textContent = completed.status;
+          tr.lastChild.lastChild.setAttribute('disabled', 'true');
+        
+          completeTaskData(id, name, completed);
+      
+        } else {
+            tr.childNodes[2].textContent = progress.status;
+            tr.lastChild.lastChild.removeAttribute('disabled');
+            completeTaskData(id, name, progress);   
     }
+  }
   });
 };
 // редактирование задачи

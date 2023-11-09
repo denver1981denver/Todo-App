@@ -23,14 +23,19 @@ export const removeTaskData = (id, name) => {
   setTaskData(newData, name);
 };
 // пометка выполненной задачи локальном хранилище
-export const completeTaskData = (id, name) => {
+export const completeTaskData = (id, name, option) => {
   const data = getTaskData(name);
-
+  const tdStyle = (option === 'complete') ? option.td : '';
   data.forEach((item) => {
     if (item.id === id) {
-      item.trClass = 'table-success';
+      item.trClass = option.tr;
+     
       item.tdTaskClass = 'text-decoration-line-through';
-      item.status = 'Выполнена';
+      
+    
+        item.tdTaskClass = tdStyle;
+    
+      item.status = option.status;
     }
   });
 
