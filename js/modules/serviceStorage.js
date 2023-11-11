@@ -26,14 +26,11 @@ export const removeTaskData = (id, name) => {
 export const completeTaskData = (id, name, option) => {
   const data = getTaskData(name);
   const tdStyle = (option.status === 'Выполнена') ? option.td : '';
-  
+
   data.forEach((item) => {
     if (item.id === id) {
       item.trClass = option.tr;
-     
-     
-        item.tdTaskClass = tdStyle;
-    
+      item.tdTaskClass = tdStyle;
       item.status = option.status;
     }
   });

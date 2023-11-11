@@ -131,9 +131,11 @@ export const createRow = task => {
   const btnDelete = createButton(createButtonCollection('delete'));
   const btnComplete = createButton(createButtonCollection('complete'));
   const btnEdit = createButton(createButtonCollection('edit'));
-  if(task.status === 'Выполнена') {
-    btnEdit.setAttribute("disabled", "disabled");
-  };
+
+  if (task.status === 'Выполнена') {
+    btnEdit.setAttribute('disabled', 'disabled');
+  }
+
   tdBtns.append(btnDelete, btnComplete, btnEdit);
   tr.append(tdNumber, tdTask, tdStatus, tdBtns);
 

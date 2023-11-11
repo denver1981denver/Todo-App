@@ -10,7 +10,7 @@ import {renderNumberTask} from './render.js';
 const counterMemory = {
   count: 0,
 };
-
+// коллекция стилей для строки с задачей
 const getTaskStatus = data => {
   const taskParameters = {
     progress: {
@@ -22,13 +22,13 @@ const getTaskStatus = data => {
       td: 'text-decoration-line-through',
       status: 'Выполнена',
     },
-  }
+  };
+
   return taskParameters[`${data}`];
 };
 
-
-
-// определение порядковых номеров при загрузке страницы согласно данным хранилища
+// определение порядковых номеров при загрузке
+// страницы согласно данным хранилища
 export const getCounterData = data => {
   counterMemory.count = data.length;
 };
@@ -108,7 +108,6 @@ export const formControl = (form, list, name) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const newTask = Object.fromEntries(formData);
-
     const taskOption = getTaskStatus('progress');
     newTask.id = createIdTask();
     newTask.trClass = taskOption.tr;
@@ -144,28 +143,26 @@ export const completeControl = (list, name) => {
     const target = e.target;
     const progress = getTaskStatus('progress');
     const completed = getTaskStatus('completed');
-    
+
     if (target.closest('.btn-success')) {
       const tr = target.closest('tr');
       const id = tr.dataset.id;
-      tr.classList.remove(progress.tr);
+      tr.classList.toggle(progress.tr);
       tr.classList.toggle(completed.tr);
       tr.childNodes[1].classList.toggle(completed.td);
 
-        if(tr.classList.contains(completed.tr)) {
-         
-          tr.childNodes[2].textContent = completed.status;
-          tr.lastChild.lastChild.setAttribute('disabled', 'true');
-        console.log(completed);
-          completeTaskData(id, name, completed);
-      
-        } else {
-           tr.classList.add(progress.tr);
-            tr.childNodes[2].textContent = progress.status;
-            tr.lastChild.lastChild.removeAttribute('disabled');
-            completeTaskData(id, name, progress);   
+      if (tr.classList.contains(completed.tr)) {
+        tr.childNodes[2].textContent = completed.status;
+        tr.lastChild.lastChild.setAttribute('disabled', 'true');
+
+        completeTaskData(id, name, completed);
+      } else {
+        tr.childNodes[2].textContent = progress.status;
+        tr.lastChild.lastChild.removeAttribute('disabled');
+
+        completeTaskData(id, name, progress);
+      }
     }
-  }
   });
 };
 // редактирование задачи
@@ -174,39 +171,37 @@ export const editControl = (list, name) => {
     const target = e.target;
 
     if (target.closest('.btn-edit')) {
-      const task = document.querySelectorAll(".task");
-      const id = target.closest("tr").dataset.id;
+      const task = document.querySelectorAll('.task');
+      const id = target.closest('tr').dataset.id;
+      const btnEdit = target.closest('.btn-edit');
 
-      if(target.closest('.btn-edit').textContent === 'Редактировать') {
-      
-      target.closest('.btn-edit').textContent = 'Сохранить';
+      btnEdit.classList.toggle('btn-secondary');
+      btnEdit.classList.toggle('btn-primary');
 
-      for (const elem of task) {
-        if (elem.parentNode.dataset.id === id) {
-          elem.setAttribute('contenteditable', 'true');
+      if (btnEdit.textContent === 'Редактировать') {
+        btnEdit.textContent = 'Сохранить';
+
+        for (const elem of task) {
+          if (elem.parentNode.dataset.id === id) {
+            elem.setAttribute('contenteditable', 'true');
+          }
         }
+      } else {
+        const getTaskEdit = () => {
+          for (const elem of task) {
+            if (elem.parentNode.dataset.id === id) {
+              elem.setAttribute('contenteditable', 'false');
+
+              return elem.textContent;
+            }
+          }
+        };
+
+        const text = getTaskEdit();
+        target.closest('.btn-edit').textContent = 'Редактировать';
+
+        editTaskData(id, name, text);
       }
-    }
-
-else {
-      // target.closest('.task').setAttribute('contenteditable', 'false');
-      // const id = target.closest('tr').dataset.id;
-      // const text = target.closest('.task').textContent;
-
-for (const elem of task) {
-        if (elem.parentNode.dataset.id === id) {
-          elem.setAttribute('contenteditable', 'false');
-        }
-      }
-     target.closest(".btn-edit").textContent = "Редактировать";
-
-      editTaskData(id, name, text);
-    }
-
-
     }
   });
-
-  
-
 };
